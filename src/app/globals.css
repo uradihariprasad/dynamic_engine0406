@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #070a12;
+  --panel: #0c111c;
+  --panel-2: #111827;
+  --border: #1e293b;
+  --border-soft: #172033;
+  --text: #e5edf7;
+  --muted: #8698b3;
+  --green: #16c784;
+  --red: #f6465d;
+  --amber: #f0b90b;
+  --blue: #3b82f6;
+  --violet: #8b5cf6;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+  color-scheme: dark;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel {
+  background: linear-gradient(180deg, rgba(17, 24, 39, 0.9) 0%, rgba(12, 17, 28, 0.95) 100%);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.panel-flat {
+  background: var(--panel);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+}
+
+.divider {
+  border-top: 1px solid var(--border-soft);
+}
+
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 8px;
+}
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.glow-green {
+  box-shadow: 0 0 0 1px rgba(22, 199, 132, 0.35), 0 0 22px rgba(22, 199, 132, 0.12);
+}
+.glow-red {
+  box-shadow: 0 0 0 1px rgba(246, 70, 93, 0.35), 0 0 22px rgba(246, 70, 93, 0.12);
+}
+
+.pulse-dot {
+  animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* ------------------------------------------------------------------ *
+ * Mobile / touch support
+ * ------------------------------------------------------------------ */
+
+html {
+  /* Prevent horizontal page panning; horizontal swipe is reserved for tables. */
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  /* Momentum scrolling on iOS; enables vertical page swipe. */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: pan-y;
+}
+
+/* Touch-friendly horizontal scroll containers for data tables.
+   44px min hit area and momentum scrolling for one-finger swipe. */
+.scroll-thin {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
+  /* Slight bottom padding so the scrollbar does not sit on the last row. */
+  padding-bottom: 4px;
+}
+.scroll-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+/* Larger, easier-to-grab scrollbar affordance on touch devices. */
+@media (hover: none) and (pointer: coarse) {
+  .scroll-thin::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 8px;
+  }
+  table {
+    /* Prevent iOS text auto-zoom while panning a table. */
+    -webkit-text-size-adjust: 100%;
+  }
+  /* Relax sticky-header z-index conflicts and enlarge tap targets. */
+  th, td {
+    height: 44px;
+  }
+  button, select, input, textarea, a {
+    min-height: 40px;
+  }
+}
+
+/* Disable hover-only affordances on touch devices so nothing looks clickable but is not. */
+@media (hover: none) {
+  .hover\:bg-slate-800\/60:hover {
+    background-color: transparent;
+  }
+}
+
+/* Fade the right edge of wide tables on touch devices to hint horizontal swipe. */
+@media (hover: none) and (pointer: coarse) {
+  .swipe-hint {
+    position: relative;
+  }
+  .swipe-hint::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 28px;
+    pointer-events: none;
+    background: linear-gradient(to left, rgba(7, 10, 18, 0.85), transparent);
+    border-radius: 0 12px 12px 0;
+  }
+}
+
+/* Sticky mobile action bar keeps the scan button reachable while scrolling. */
+.mobile-scan-bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+/* Safe-area padding for notched devices. */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+}

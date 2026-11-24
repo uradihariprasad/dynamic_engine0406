@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: dynamic-engine
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npx drizzle-kit push && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    # A single instance keeps the in-memory token layer consistent; the encrypted
+    # session store in PostgreSQL also makes the token visible to any new instance
+    # after a restart or redeploy.
+    numInstances: 1
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: dynamic-engine-db
+          property: connectionString
+      - key: UPSTOX_BASE_URL
+        value: https://api.upstox.com
+      - key: UPSTOX_MAX_RPS
+        value: "6"
+      - key: UPSTOX_TIMEOUT_MS
+        value: "15000"
+      # How long a computed analysis snapshot stays cached before recomputation.
+      # Keep this below the client scan interval so each 30s scan gets fresh data.
+      - key: ANALYSIS_TTL_MS
+        value: "8000"
+      # Client auto-scan interval in milliseconds (30 seconds).
+      - key: NEXT_PUBLIC_POLL_MS
+        value: "30000"
+      - key: SESSION_TTL_MS
+        value: "43200000"
+      - key: OI_SNAPSHOT_INTERVAL_MS
+        value: "30000"
+      - key: NODE_VERSION
+        value: "22.11.0"
+
+databases:
+  - name: dynamic-engine-db
+    plan: basic-256mb
+    databaseName: dynamic_engine
+    user: dynamic_engine
